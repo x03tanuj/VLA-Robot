@@ -1,0 +1,148 @@
+.app {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.app h1 {
+  margin-bottom: 16px;
+}
+
+.webcam-panel {
+  margin-bottom: 16px;
+}
+
+.webcam-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  border: 1px solid #d2d2d2;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+
+.webcam {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.crosshair {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.crosshair-h,
+.crosshair-v {
+  position: absolute;
+  background: #ff2d55;
+}
+
+.crosshair-h {
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.crosshair-v {
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.crosshair-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff2d55;
+  transform: translate(-50%, -50%);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: end;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.controls label {
+  grid-column: 1 / -1;
+  text-align: left;
+  font-weight: 600;
+}
+
+.controls input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.controls button {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #1f6feb;
+  color: #fff;
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.error {
+  margin: 14px auto 0;
+  max-width: 720px;
+  color: #b42318;
+  text-align: left;
+}
+
+.result {
+  margin: 16px auto 0;
+  max-width: 720px;
+  padding: 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.result h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.result p {
+  margin: 6px 0;
+}
+
+@media (max-width: 640px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .controls button {
+    width: 100%;
+  }
+}
