@@ -24,11 +24,14 @@ function dataUrlToBlob(dataUrl) {
 
 function App() {
   const webcamRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const [command, setCommand] = useState("pick up the red bottle");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [useWebcam, setUseWebcam] = useState(true);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,19 +43,29 @@ function App() {
       return;
     }
 
-    const screenshot = webcamRef.current?.getScreenshot();
-    if (!screenshot) {
-      setError("Could not capture webcam frame. Check camera permissions.");
-      return;
+    let imageBlob;
+
+    if (useWebcam) {
+      const screenshot = webcamRef.current?.getScreenshot();
+      if (!screenshot) {
+        setError("Could not capture webcam frame. Check camera permissions.");
+        return;
+      }
+      imageBlob = dataUrlToBlob(screenshot);
+    } else {
+      if (!uploadedImage) {
+        setError("Please upload an image.");
+        return;
+      }
+      imageBlob = uploadedImage;
     }
 
     setLoading(true);
     setResult(null);
 
     try {
-      const imageBlob = dataUrlToBlob(screenshot);
       const formData = new FormData();
-      formData.append("image", imageBlob, "capture.jpg");
+      formData.append("image", imageBlob, "image.jpg");
       formData.append("command", trimmedCommand);
 
       const response = await fetch(API_URL, {
@@ -75,32 +88,115 @@ function App() {
     }
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      return;
+    }
+
+    setUploadedImage(file);
+    setError("");
+  };
+
+  const handleModeToggle = () => {
+    setUseWebcam(!useWebcam);
+    setUploadedImage(null);
+    setResult(null);
+    setError("");
+  };
+
+  const displayedImage = useWebcam ? null : uploadedImage;
+
   return (
     <main className="app">
       <h1>Robot Vision Control</h1>
 
+      <div className="mode-toggle">
+        <button
+          type="button"
+          className={`toggle-btn ${useWebcam ? "active" : ""}`}
+          onClick={handleModeToggle}
+        >
+          📷 Webcam
+        </button>
+        <button
+          type="button"
+          className={`toggle-btn ${!useWebcam ? "active" : ""}`}
+          onClick={handleModeToggle}
+        >
+          📁 Upload Demo
+        </button>
+      </div>
+
       <div className="webcam-panel">
         <div className="webcam-wrap">
-          <Webcam
-            ref={webcamRef}
-            audio={false}
-            screenshotFormat="image/jpeg"
-            className="webcam"
-            videoConstraints={{ facingMode: "environment" }}
-          />
+          {useWebcam ? (
+            <>
+              <Webcam
+                ref={webcamRef}
+                audio={false}
+                screenshotFormat="image/jpeg"
+                className="webcam"
+                videoConstraints={{ facingMode: "environment" }}
+              />
 
-          {result && (
-            <div
-              className="crosshair"
-              style={{ left: `${result.x}%`, top: `${result.y}%` }}
-              aria-hidden="true"
-            >
-              <span className="crosshair-h" />
-              <span className="crosshair-v" />
-              <span className="crosshair-dot" />
-            </div>
+              {result && (
+                <div
+                  className="crosshair"
+                  style={{ left: `${result.x}%`, top: `${result.y}%` }}
+                  aria-hidden="true"
+                >
+                  <span className="crosshair-h" />
+                  <span className="crosshair-v" />
+                  <span className="crosshair-dot" />
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {displayedImage ? (
+                <img
+                  src={URL.createObjectURL(displayedImage)}
+                  alt="Uploaded preview"
+                  className="webcam"
+                />
+              ) : (
+                <div className="upload-placeholder">
+                  <p>📁 No image selected</p>
+                  <p className="placeholder-hint">
+                    Click the button below to choose an image
+                  </p>
+                </div>
+              )}
+
+              {result && (
+                <div
+                  className="crosshair"
+                  style={{ left: `${result.x}%`, top: `${result.y}%` }}
+                  aria-hidden="true"
+                >
+                  <span className="crosshair-h" />
+                  <span className="crosshair-v" />
+                  <span className="crosshair-dot" />
+                </div>
+              )}
+            </>
           )}
         </div>
+
+        {!useWebcam && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileUpload}
+            className="file-input"
+            aria-label="Upload image file"
+          />
+        )}
       </div>
 
       <form className="controls" onSubmit={handleSubmit}>

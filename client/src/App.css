@@ -10,6 +10,39 @@
   margin-bottom: 16px;
 }
 
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid #d2d2d2;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+  border-color: #1f6feb;
+  color: #1f6feb;
+}
+
+.toggle-btn.active {
+  background: #1f6feb;
+  border-color: #1f6feb;
+  color: #fff;
+}
+
 .webcam-panel {
   margin-bottom: 16px;
 }
@@ -29,6 +62,50 @@
   width: 100%;
   height: auto;
   display: block;
+}
+
+.upload-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  color: #666;
+  font-size: 16px;
+}
+
+.upload-placeholder p {
+  margin: 0;
+}
+
+.placeholder-hint {
+  font-size: 14px;
+  color: #999;
+}
+
+.file-input {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid #d2d2d2;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.file-input::-webkit-file-upload-button {
+  background: #f5f5f5;
+  border: 1px solid #d2d2d2;
+  border-radius: 4px;
+  padding: 6px 12px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.file-input::-webkit-file-upload-button:hover {
+  background: #e8e8e8;
 }
 
 .crosshair {
@@ -144,5 +221,14 @@
 
   .controls button {
     width: 100%;
+  }
+
+  .mode-toggle {
+    flex-direction: row;
+  }
+
+  .toggle-btn {
+    padding: 8px 12px;
+    font-size: 13px;
   }
 }
